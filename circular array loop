@@ -1,0 +1,52 @@
+class Solution(object):
+    def circularArrayLoop(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: bool
+        """
+        n = len(nums)
+
+        for i in range(n):
+            if nums[i] == 0:
+                continue
+
+            slow = i
+            fast = i
+
+            direction = nums[i] > 0
+
+            while True:
+                # Move slow pointer
+                next_slow = (slow + nums[slow]) % n
+
+                if nums[next_slow] == 0 or (nums[next_slow] > 0) != direction:
+                    break
+
+                # Move fast pointer once
+                next_fast = (fast + nums[fast]) % n
+
+                if nums[next_fast] == 0 or (nums[next_fast] > 0) != direction:
+                    break
+
+                # Move fast pointer twice
+                next_fast = (next_fast + nums[next_fast]) % n
+
+                if nums[next_fast] == 0 or (nums[next_fast] > 0) != direction:
+                    break
+
+                slow = next_slow
+                fast = next_fast
+
+                if slow == fast:
+                    if slow == (slow + nums[slow]) % n:
+                        break
+                    return True
+
+            # Mark visited elements
+            slow = i
+            while nums[slow] != 0 and (nums[slow] > 0) == direction:
+                next_index = (slow + nums[slow]) % n
+                nums[slow] = 0
+                slow = next_index
+
+        return False
